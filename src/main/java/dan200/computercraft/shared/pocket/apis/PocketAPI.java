@@ -81,8 +81,8 @@ public class PocketAPI implements ILuaAPI {
                             // Consume an item from this stack and exit the loop
                             invStack = invStack.copy();
                             invStack.shrink(1);
-                            inventory.setInventorySlotContents((i + held) % size, invStack.getCount() <= 0 ? null : invStack);
-
+                            inventory.setInventorySlotContents((i + held) % size, invStack);
+                            
                             break;
                         }
                     }
