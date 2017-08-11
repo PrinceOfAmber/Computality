@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of ComputerCraft - http://www.computercraft.info
  * Copyright Daniel Ratcliffe, 2011-2016. Do not distribute without permission.
  * Send enquiries to dratcliffe@gmail.com
@@ -37,6 +37,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.tuple.Pair;
 
+import javax.annotation.Nonnull;
 import javax.vecmath.Matrix4f;
 
 public class TurtleTool implements ITurtleUpgrade {
@@ -73,6 +74,7 @@ public class TurtleTool implements ITurtleUpgrade {
     }
 
     @Override
+    @Nonnull
     public ItemStack getCraftingItem() {
         return m_item.copy();
     }

@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of ComputerCraft - http://www.computercraft.info
  * Copyright Daniel Ratcliffe, 2011-2016. Do not distribute without permission.
  * Send enquiries to dratcliffe@gmail.com
@@ -46,7 +46,6 @@ import dan200.computercraft.shared.turtle.blocks.TileTurtle;
 import dan200.computercraft.shared.turtle.upgrades.*;
 import dan200.computercraft.shared.util.*;
 import io.netty.buffer.Unpooled;
-import net.minecraft.command.server.CommandSummon;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -67,7 +66,6 @@ import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.network.FMLEventChannel;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.internal.FMLProxyPacket;
-import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 
 import javax.annotation.Nonnull;
@@ -327,8 +325,7 @@ public class ComputerCraft {
         // Try the handlers in order:
         for (IPeripheralProvider peripheralProvider : peripheralProviders) {
             try {
-                IPeripheralProvider handler = peripheralProvider;
-                IPeripheral peripheral = handler.getPeripheral(world, pos, side);
+                IPeripheral peripheral = peripheralProvider.getPeripheral(world, pos, side);
                 if (peripheral != null) {
                     return peripheral;
                 }
@@ -510,7 +507,7 @@ public class ComputerCraft {
         return turtleProxy.getTurtleUpgrade(legacyID);
     }
 
-    public static ITurtleUpgrade getTurtleUpgrade(ItemStack item) {
+    public static ITurtleUpgrade getTurtleUpgrade(@Nonnull ItemStack item) {
         return turtleProxy.getTurtleUpgrade(item);
     }
 
@@ -547,7 +544,7 @@ public class ComputerCraft {
         Config.disable_lua51_features = prop.getBoolean(Config.disable_lua51_features);
 
         prop = Config.config.get(Configuration.CATEGORY_GENERAL, "default_computer_settings", Config.default_computer_settings);
-        prop.setComment("A comma seperated list of default system settings to set on new computers. Example: \"shell.autocomplete=false,lua.autocomplete=false,edit.autocomplete=false\" will disable all autocompletion");
+        prop.setComment("A comma separated list of default system settings to set on new computers. Example: \"shell.autocomplete=false,lua.autocomplete=false,edit.autocomplete=false\" will disable all autocompletion");
         Config.default_computer_settings = prop.getString();
 
         prop = Config.config.get(Configuration.CATEGORY_GENERAL, "enableCommandBlock", Config.enableCommandBlock);
@@ -569,6 +566,14 @@ public class ComputerCraft {
         prop = Config.config.get(Configuration.CATEGORY_GENERAL, "modem_highAltitudeRangeDuringStorm", Config.modem_highAltitudeRangeDuringStorm);
         prop.setComment("The range of Wireless Modems at maximum altitude in stormy weather, in meters");
         Config.modem_highAltitudeRangeDuringStorm = Math.min(prop.getInt(), 100000);
+
+        prop = Config.config.get(Configuration.CATEGORY_GENERAL, "monitorFullbright", Config.monitorFullbright);
+        prop.setComment("Make monitors ignore light level and render at full brightness at all times");
+        Config.monitorFullbright = prop.getBoolean();
+
+        prop = Config.config.get(Configuration.CATEGORY_GENERAL, "enableEnergyAPI", Config.enableEnergyAPI);
+        prop.setComment("Make any ForgeEnergy provider be a peripheral and have an API attached");
+        Config.enableEnergyAPI = prop.getBoolean();
 
         prop = Config.config.get(Configuration.CATEGORY_GENERAL, "computerSpaceLimit", Config.computerSpaceLimit);
         prop.setComment("The disk space limit for computers and turtles, in bytes");
@@ -656,6 +661,8 @@ public class ComputerCraft {
         public static int computerSpaceLimit = 1000 * 1000;
         public static int floppySpaceLimit = 125 * 1000;
         public static int maximumFilesOpen = 128;
+        public static boolean monitorFullbright = true;
+        public static boolean enableEnergyAPI = true;
         public static Configuration config;
     }
 

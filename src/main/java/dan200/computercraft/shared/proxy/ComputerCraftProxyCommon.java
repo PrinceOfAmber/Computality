@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of ComputerCraft - http://www.computercraft.info
  * Copyright Daniel Ratcliffe, 2011-2016. Do not distribute without permission.
  * Send enquiries to dratcliffe@gmail.com
@@ -36,6 +36,7 @@ import dan200.computercraft.shared.peripheral.commandblock.CommandBlockPeriphera
 import dan200.computercraft.shared.peripheral.common.*;
 import dan200.computercraft.shared.peripheral.diskdrive.ContainerDiskDrive;
 import dan200.computercraft.shared.peripheral.diskdrive.TileDiskDrive;
+import dan200.computercraft.shared.peripheral.energy.EnergyPeripheralProvider;
 import dan200.computercraft.shared.peripheral.modem.BlockAdvancedModem;
 import dan200.computercraft.shared.peripheral.modem.TileAdvancedModem;
 import dan200.computercraft.shared.peripheral.modem.TileCable;
@@ -158,12 +159,7 @@ public abstract class ComputerCraftProxyCommon implements IComputerCraftProxy {
             if (listener.isCallingFromMinecraftThread()) {
                 processPacket(packet, player);
             } else {
-                listener.addScheduledTask(new Runnable() {
-                    @Override
-                    public void run() {
-                        processPacket(packet, player);
-                    }
-                });
+                listener.addScheduledTask(() -> processPacket(packet, player));
             }
         }
     }
@@ -270,7 +266,7 @@ public abstract class ComputerCraftProxyCommon implements IComputerCraftProxy {
         RecipeSorter.register("computercraft:impostor_shapeless", ImpostorShapelessRecipe.class, RecipeSorter.Category.SHAPELESS, "after:minecraft:shapeless");
         RecipeSorter.register("computercraft:disk", DiskRecipe.class, RecipeSorter.Category.SHAPELESS, "after:minecraft:shapeless");
         RecipeSorter.register("computercraft:printout", PrintoutRecipe.class, RecipeSorter.Category.SHAPELESS, "after:minecraft:shapeless");
-        //RecipeSorter.register("computercraft:pocket_computer_upgrade", PocketComputerUpgradeRecipe.class, RecipeSorter.Category.SHAPELESS, "after:minecraft:shapeless");
+        RecipeSorter.register("computercraft:pocket_computer_upgrade", PocketComputerUpgradeRecipe.class, RecipeSorter.Category.SHAPELESS, "after:minecraft:shapeless");
 
         // Recipes
         // Computer
@@ -478,9 +474,10 @@ public abstract class ComputerCraftProxyCommon implements IComputerCraftProxy {
 
         // Register peripheral providers
         ComputerCraftAPI.registerPeripheralProvider(new DefaultPeripheralProvider());
-        if (ComputerCraft.Config.enableCommandBlock) {
+        if (ComputerCraft.Config.enableCommandBlock)
             ComputerCraftAPI.registerPeripheralProvider(new CommandBlockPeripheralProvider());
-        }
+        if (ComputerCraft.Config.enableEnergyAPI)
+            ComputerCraftAPI.registerPeripheralProvider(new EnergyPeripheralProvider());
 
         // Register bundled power providers
         ComputerCraftAPI.registerBundledRedstoneProvider(new DefaultBundledRedstoneProvider());

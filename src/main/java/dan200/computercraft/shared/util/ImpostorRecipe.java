@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of ComputerCraft - http://www.computercraft.info
  * Copyright Daniel Ratcliffe, 2011-2016. Do not distribute without permission.
  * Send enquiries to dratcliffe@gmail.com
@@ -23,6 +23,6 @@ public class ImpostorRecipe extends ShapedRecipes {
 
     @Override
     public ItemStack getCraftingResult(InventoryCrafting _inventory) {
-        return null;
+        return ItemStack.EMPTY;
     }
 }

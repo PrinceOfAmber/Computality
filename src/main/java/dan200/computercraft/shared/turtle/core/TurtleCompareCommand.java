@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of ComputerCraft - http://www.computercraft.info
  * Copyright Daniel Ratcliffe, 2011-2016. Do not distribute without permission.
  * Send enquiries to dratcliffe@gmail.com
@@ -42,7 +42,7 @@ public class TurtleCompareCommand implements ITurtleCommand {
         BlockPos oldPosition = turtle.getPosition();
         BlockPos newPosition = oldPosition.offset(direction);
 
-        ItemStack lookAtStack = null;
+        ItemStack lookAtStack = ItemStack.EMPTY;
         if (WorldUtil.isBlockInWorld(world, newPosition)) {
             if (!world.isAirBlock(newPosition)) {
                 IBlockState lookAtState = world.getBlockState(newPosition);
@@ -68,10 +68,8 @@ public class TurtleCompareCommand implements ITurtleCommand {
                     // (try 5 times to try and beat random number generators)
                     for (int i = 0; (i < 5) && (lookAtStack == null); ++i) {
                         java.util.List<ItemStack> drops = lookAtBlock.getDrops(world, newPosition, lookAtState, 0);
-                        if (drops != null && drops.size() > 0) {
-                            Iterator<ItemStack> it = drops.iterator();
-                            while (it.hasNext()) {
-                                ItemStack drop = it.next();
+                        if (drops.size() > 0) {
+                            for (ItemStack drop : drops) {
                                 if (drop.getItem() == Item.getItemFromBlock(lookAtBlock)) {
                                     lookAtStack = drop;
                                     break;
@@ -94,9 +92,9 @@ public class TurtleCompareCommand implements ITurtleCommand {
         }
 
         // Compare them
-        if (selectedStack == null && lookAtStack == null) {
+        if (selectedStack.isEmpty() && (lookAtStack == null || lookAtStack.isEmpty())) {
             return TurtleCommandResult.success();
-        } else if (selectedStack != null && lookAtStack != null) {
+        } else if (!selectedStack.isEmpty() && (lookAtStack != null && !lookAtStack.isEmpty())) {
             if (selectedStack.getItem() == lookAtStack.getItem()) {
                 if (!selectedStack.getHasSubtypes()) {
                     return TurtleCommandResult.success();

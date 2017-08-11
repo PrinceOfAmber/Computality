@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * Wrapper class for pocket computers
  */
-public interface IPocketAccess {
+public interface IPocketAccess<T extends IPocketAccess<?>> {
     /**
      * Gets the holding entity of this item
      *
@@ -24,16 +24,17 @@ public interface IPocketAccess {
     /**
      * Get if the modem light is turned on
      *
-     * @return If the modem light is turned on
+     * @return The colour of the pocket computer's light.
+     * @see #setModemLight(int)
      */
-    boolean getModemLight();
+    int getModemLight();
 
     /**
      * Turn on/off the modem light
      *
      * @param value If the light should be on
      */
-    void setModemLight(boolean value);
+    T setModemLight(int value);
 
     /**
      * Get the upgrade specific NBT

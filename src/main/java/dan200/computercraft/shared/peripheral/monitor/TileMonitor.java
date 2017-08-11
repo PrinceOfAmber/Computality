@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of ComputerCraft - http://www.computercraft.info
  * Copyright Daniel Ratcliffe, 2011-2016. Do not distribute without permission.
  * Send enquiries to dratcliffe@gmail.com
@@ -23,6 +23,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 
 import java.util.HashSet;
@@ -92,7 +93,7 @@ public class TileMonitor extends TilePeripheralBase
     public boolean onActivate(EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (!player.isSneaking() && getFront() == side) {
             if (!getWorld().isRemote) {
-                monitorTouched(hitX, hitY, hitZ);
+                monitorTouched(player, hitX, hitY, hitZ);
             }
             return true;
         }
@@ -610,7 +611,7 @@ public class TileMonitor extends TilePeripheralBase
         }
     }
 
-    public void monitorTouched(float xPos, float yPos, float zPos) {
+    public void monitorTouched(EntityPlayer player, float xPos, float yPos, float zPos) {
         int side = getDir();
         XYPair pair = convertToXY(xPos, yPos, zPos, side);
         pair = new XYPair(pair.x + m_xIndex, pair.y + m_height - m_yIndex - 1);
@@ -637,16 +638,16 @@ public class TileMonitor extends TilePeripheralBase
             for (int x = 0; x < m_width; ++x) {
                 TileMonitor monitor = getNeighbour(x, y);
                 if (monitor != null) {
-                    monitor.queueTouchEvent(xCharPos, yCharPos);
+                    monitor.queueTouchEvent(player, xCharPos, yCharPos);
                 }
             }
         }
     }
 
-    private void queueTouchEvent(int xCharPos, int yCharPos) {
+    private void queueTouchEvent(EntityPlayer player, int xCharPos, int yCharPos) {
         for (IComputerAccess computer : m_computers) {
             computer.queueEvent("monitor_touch", new Object[]{
-                    computer.getAttachmentName(), xCharPos, yCharPos
+                    computer.getAttachmentName(), xCharPos, yCharPos, player.getUniqueID().toString()
             });
         }
     }

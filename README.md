@@ -1,6 +1,6 @@
-ComputerCraft
+Computality
 =============
-[![Build Status](https://travis-ci.org/dan200/ComputerCraft.svg?branch=master)](https://travis-ci.org/dan200/ComputerCraft)
+[![GitHub issues](https://img.shields.io/github/issues/NoMansMinecraft/Computality.svg?style=flat-square)](https://github.com/NoMansMinecraft/Computality/issues) [![GitHub pull requests](https://img.shields.io/github/issues-pr/NoMansMinecraft/Computality.svg?style=flat-square)](https://github.com/NoMansMinecraft/Computality/pulls) [![GitHub contributors](https://img.shields.io/github/contributors/NoMansMinecraft/Computality.svg?style=flat-square)](https://github.com/NoMansMinecraft/Computality/graphs/contributors)
 
 ComputerCraft is a Minecraft modification which adds programmable Robots and Computers to the world of Minecraft.
 If you're not familiar with ComputerCraft, visit the [Website](http://www.computercraft.info/download) or the [Wiki](http://www.computercraft.info/wiki) to find out more.

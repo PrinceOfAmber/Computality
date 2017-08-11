@@ -20,7 +20,7 @@ import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.Map;
 
-public class PocketServerComputer extends ServerComputer implements IPocketAccess {
+public class PocketServerComputer extends ServerComputer implements IPocketAccess<PocketServerComputer> {
     private IPocketUpgrade m_upgrade;
     private Entity m_entity;
     private ItemStack m_stack;
@@ -37,40 +37,26 @@ public class PocketServerComputer extends ServerComputer implements IPocketAcces
     }
 
     @Override
-    public boolean getModemLight() {
-        return getUserData().getBoolean("modemLight");
+    public int getModemLight() {
+        int value = getUserData().getInteger("modemLight");
+        return value >= 0 && value <= 15 ? value : 0;
     }
 
     @Override
-    public void setModemLight(boolean value) {
+    public PocketServerComputer setModemLight(int value) {
+        if (value < 0 || value > 15) throw new IllegalArgumentException("Colour out of bounds");
         NBTTagCompound tag = getUserData();
-        if (tag.getBoolean("modemLight") != value) {
-            tag.setBoolean("modemLight", value);
+        if (tag.getInteger("modemLight") != value) {
+            tag.setInteger("modemLight", value);
             updateUserData();
         }
+        return this;
     }
 
     @Nonnull
     @Override
     public NBTTagCompound getUpgradeNBTData() {
-        NBTTagCompound tag;
-        if (m_stack.hasTagCompound()) {
-            tag = m_stack.getTagCompound();
-        } else {
-            tag = new NBTTagCompound();
-            m_stack.setTagCompound(tag);
-        }
-
-        if (tag.hasKey("upgrade_info", Constants.NBT.TAG_COMPOUND)) {
-            return tag.getCompoundTag("upgrade_info");
-        } else {
-            NBTTagCompound sub = new NBTTagCompound();
-
-            tag.setTag("upgrade_info", sub);
-            updateUpgradeNBTData();
-
-            return sub;
-        }
+        return ComputerCraft.Items.pocketComputer.getUpgradeInfo( m_stack );
     }
 
     @Override

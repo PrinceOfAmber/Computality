@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of ComputerCraft - http://www.computercraft.info
  * Copyright Daniel Ratcliffe, 2011-2016. Do not distribute without permission.
  * Send enquiries to dratcliffe@gmail.com
@@ -40,7 +40,7 @@ public enum Colour {
         if (colour >= 0 && colour < 16) {
             return Colour.values()[colour];
         }
-        return null;
+        return Colour.Black;
     }
 
     public Colour getNext() {

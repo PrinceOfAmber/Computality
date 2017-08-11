@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of ComputerCraft - http://www.computercraft.info
  * Copyright Daniel Ratcliffe, 2011-2016. Do not distribute without permission.
  * Send enquiries to dratcliffe@gmail.com
@@ -26,14 +26,14 @@ public class TurtleRefuelCommand implements ITurtleCommand {
         if (m_limit == 0) {
             // If limit is zero, just check the item is combustible
             ItemStack dummyStack = turtle.getInventory().getStackInSlot(turtle.getSelectedSlot());
-            if (dummyStack != null) {
+            if (!dummyStack.isEmpty()) {
                 return refuel(turtle, dummyStack, true);
             }
         } else {
             // Otherwise, refuel for real
             // Remove items from inventory
             ItemStack stack = InventoryUtil.takeItems(m_limit, turtle.getInventory(), turtle.getSelectedSlot(), 1, turtle.getSelectedSlot());
-            if (stack != null) {
+            if (!stack.isEmpty()) {
                 TurtleCommandResult result = refuel(turtle, stack, false);
                 if (!result.isSuccess()) {
                     // If the items weren't burnt, put them back
@@ -65,7 +65,7 @@ public class TurtleRefuelCommand implements ITurtleCommand {
             turtle.addFuel(fuelToGive);
 
             // Store the replacement item in the inventory
-            if (replacementStack != null) {
+            if (!replacementStack.isEmpty()) {
                 InventoryUtil.storeItems(replacementStack, turtle.getInventory(), 0, turtle.getInventory().getSizeInventory(), turtle.getSelectedSlot());
             }
 

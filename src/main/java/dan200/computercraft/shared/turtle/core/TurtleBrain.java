@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of ComputerCraft - http://www.computercraft.info
  * Copyright Daniel Ratcliffe, 2011-2016. Do not distribute without permission.
  * Send enquiries to dratcliffe@gmail.com
@@ -769,7 +769,7 @@ public class TurtleBrain implements ITurtleAccess {
         for (TurtleSide side : TurtleSide.values()) {
             ITurtleUpgrade upgrade = getUpgrade(side);
             IPeripheral peripheral = null;
-            if (upgrade != null && upgrade.getType() == TurtleUpgradeType.Peripheral) {
+            if (upgrade != null && upgrade.getType().isPeripheral()) {
                 peripheral = upgrade.createPeripheral(this, side);
             }
 

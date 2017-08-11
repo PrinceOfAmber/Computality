@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of ComputerCraft - http://www.computercraft.info
  * Copyright Daniel Ratcliffe, 2011-2016. Do not distribute without permission.
  * Send enquiries to dratcliffe@gmail.com
@@ -24,6 +24,7 @@ import dan200.computercraft.shared.pocket.items.ItemPocketComputer;
 import dan200.computercraft.shared.proxy.ComputerCraftProxyCommon;
 import dan200.computercraft.shared.turtle.blocks.TileTurtle;
 import dan200.computercraft.shared.turtle.entity.TurtleVisionCamera;
+import dan200.computercraft.shared.util.Colour;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemMeshDefinition;
@@ -121,7 +122,6 @@ public class ComputerCraftProxyClient extends ComputerCraftProxyCommon {
             @Override
             public ModelResourceLocation getModelLocation(ItemStack stack) {
                 ItemPocketComputer itemPocketComputer = (ItemPocketComputer) stack.getItem();
-                boolean modemOn = itemPocketComputer.getLightState(stack);
                 switch (itemPocketComputer.getFamily(stack)) {
                     case Advanced: {
                         switch (itemPocketComputer.getState(stack)) {
@@ -130,10 +130,10 @@ public class ComputerCraftProxyClient extends ComputerCraftProxyCommon {
                                 return advanced_pocket_computer_off;
                             }
                             case On: {
-                                return modemOn ? advanced_pocket_computer_on_modem_on : advanced_pocket_computer_on;
+                                return advanced_pocket_computer_on;
                             }
                             case Blinking: {
-                                return modemOn ? advanced_pocket_computer_blinking_modem_on : advanced_pocket_computer_blinking;
+                                return advanced_pocket_computer_blinking;
                             }
                         }
                     }
@@ -145,23 +145,32 @@ public class ComputerCraftProxyClient extends ComputerCraftProxyCommon {
                                 return pocket_computer_off;
                             }
                             case On: {
-                                return modemOn ? pocket_computer_on_modem_on : pocket_computer_on;
+                                return pocket_computer_on;
                             }
                             case Blinking: {
-                                return modemOn ? pocket_computer_blinking_modem_on : pocket_computer_blinking;
+                                return pocket_computer_blinking;
                             }
                         }
                     }
                 }
             }
         }, new String[]{
-                "pocket_computer", "pocket_computer_on", "pocket_computer_blinking", "pocket_computer_on_modem_on", "pocket_computer_blinking_modem_on",
-                "advanced_pocket_computer_off", "advanced_pocket_computer_on", "advanced_pocket_computer_blinking", "advanced_pocket_computer_on_modem_on", "advanced_pocket_computer_blinking_modem_on",
+                "pocket_computer", "pocket_computer_on", "pocket_computer_blinking",
+                "advanced_pocket_computer_off", "advanced_pocket_computer_on", "advanced_pocket_computer_blinking",
         });
 
         // Setup
         mc.getItemColors().registerItemColorHandler(new DiskColorHandler(ComputerCraft.Items.disk), ComputerCraft.Items.disk);
         mc.getItemColors().registerItemColorHandler(new DiskColorHandler(ComputerCraft.Items.diskExpanded), ComputerCraft.Items.diskExpanded);
+
+        mc.getItemColors().registerItemColorHandler(
+                (stack, tintIndex) -> {
+                    if(tintIndex!=1)
+                        return 0xFFFFFF;
+                    return Colour.fromInt(ComputerCraft.Items.pocketComputer.getLightState( stack )).getHex();
+                },
+                ComputerCraft.Items.pocketComputer
+        );
 
         // Setup renderers
         ClientRegistry.bindTileEntitySpecialRenderer(TileMonitor.class, new TileEntityMonitorRenderer());

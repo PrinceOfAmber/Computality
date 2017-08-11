@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of ComputerCraft - http://www.computercraft.info
  * Copyright Daniel Ratcliffe, 2011-2016. Do not distribute without permission.
  * Send enquiries to dratcliffe@gmail.com
@@ -28,19 +28,25 @@ public class TurtleCraftCommand implements ITurtleCommand {
     @Override
     public TurtleCommandResult execute(ITurtleAccess turtle) {
         // Craft the item
+
+        if (turtle.isFuelNeeded() && turtle.getFuelLevel() < 1) {
+            return TurtleCommandResult.failure("Out of fuel");
+        }
+
         TurtleInventoryCrafting crafting = new TurtleInventoryCrafting(turtle);
         ArrayList<ItemStack> results = crafting.doCrafting(turtle.getWorld(), m_limit);
         if (results != null) {
             // Store the results
             for (ItemStack stack : results) {
                 ItemStack remainder = InventoryUtil.storeItems(stack, turtle.getInventory(), 0, turtle.getInventory().getSizeInventory(), turtle.getSelectedSlot());
-                if (remainder != null) {
+                if (!remainder.isEmpty()) {
                     // Drop the remainder
                     BlockPos position = turtle.getPosition();
                     WorldUtil.dropItemStack(remainder, turtle.getWorld(), position, turtle.getDirection());
                 }
             }
 
+            turtle.consumeFuel(1);
             if (results.size() > 0) {
                 // Animate
                 turtle.playAnimation(TurtleAnimation.Wait);

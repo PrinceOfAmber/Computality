@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of ComputerCraft - http://www.computercraft.info
  * Copyright Daniel Ratcliffe, 2011-2016. Do not distribute without permission.
  * Send enquiries to dratcliffe@gmail.com
@@ -15,6 +15,8 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 
+import javax.annotation.Nonnull;
+
 public class TurtleEquipCommand implements ITurtleCommand {
     private final TurtleSide m_side;
 
@@ -29,25 +31,25 @@ public class TurtleEquipCommand implements ITurtleCommand {
         ItemStack newUpgradeStack;
         IInventory inventory = turtle.getInventory();
         ItemStack selectedStack = inventory.getStackInSlot(turtle.getSelectedSlot());
-        if (selectedStack != null) {
+        if (!selectedStack.isEmpty()) {
             newUpgradeStack = selectedStack.copy();
             newUpgrade = ComputerCraft.getTurtleUpgrade(newUpgradeStack);
             if (newUpgrade == null || !CCTurtleProxyCommon.isUpgradeSuitableForFamily(((TurtleBrain) turtle).getFamily(), newUpgrade)) {
                 return TurtleCommandResult.failure("Not a valid upgrade");
             }
         } else {
-            newUpgradeStack = null;
+            newUpgradeStack = ItemStack.EMPTY;
             newUpgrade = null;
         }
 
         // Determine the upgrade to replace
-        ItemStack oldUpgradeStack;
+        @Nonnull ItemStack oldUpgradeStack;
         ITurtleUpgrade oldUpgrade = turtle.getUpgrade(m_side);
         if (oldUpgrade != null) {
             ItemStack craftingItem = oldUpgrade.getCraftingItem();
-            oldUpgradeStack = (craftingItem != null) ? craftingItem.copy() : null;
+            oldUpgradeStack = (!craftingItem.isItemStackDamageable()) ? craftingItem.copy() : ItemStack.EMPTY;
         } else {
-            oldUpgradeStack = null;
+            oldUpgradeStack = ItemStack.EMPTY;
         }
 
         // Do the swapping:
@@ -56,10 +58,10 @@ public class TurtleEquipCommand implements ITurtleCommand {
             InventoryUtil.takeItems(1, inventory, turtle.getSelectedSlot(), 1, turtle.getSelectedSlot());
             inventory.markDirty();
         }
-        if (oldUpgradeStack != null) {
+        if (!oldUpgradeStack.isEmpty()) {
             // Store old upgrades item
             ItemStack remainder = InventoryUtil.storeItems(oldUpgradeStack, inventory, 0, inventory.getSizeInventory(), turtle.getSelectedSlot());
-            if (remainder != null) {
+            if (!remainder.isEmpty()) {
                 // If there's no room for the items, drop them
                 BlockPos position = turtle.getPosition();
                 WorldUtil.dropItemStack(remainder, turtle.getWorld(), position, turtle.getDirection());

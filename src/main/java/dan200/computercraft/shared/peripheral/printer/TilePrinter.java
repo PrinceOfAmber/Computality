@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of ComputerCraft - http://www.computercraft.info
  * Copyright Daniel Ratcliffe, 2011-2016. Do not distribute without permission.
  * Send enquiries to dratcliffe@gmail.com
@@ -423,7 +423,7 @@ public class TilePrinter extends TilePeripheralBase
             ItemStack stack = ItemPrintout.createSingleFromTitleAndText(m_pageTitle, lines, colours);
             synchronized (inventory) {
                 ItemStack remainder = InventoryUtil.storeItems(stack, this, 7, 6, 7);
-                if (remainder == null) {
+                if (remainder.isEmpty()) {
                     m_printing = false;
                     return true;
                 }
@@ -438,7 +438,7 @@ public class TilePrinter extends TilePeripheralBase
                 ItemStack stack = inventory.getStackInSlot(i);
                 if (!stack.isEmpty()) {
                     // Remove the stack from the inventory
-                    setInventorySlotContents(i, null);
+                    setInventorySlotContents(i, ItemStack.EMPTY);
 
                     // Spawn the item in the world
                     BlockPos pos = getPos();

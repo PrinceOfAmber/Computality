@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of ComputerCraft - http://www.computercraft.info
  * Copyright Daniel Ratcliffe, 2011-2016. Do not distribute without permission.
  * Send enquiries to dratcliffe@gmail.com
@@ -46,10 +46,7 @@ public class TurtleMoveCommand implements ITurtleCommand {
 
         // Check existing block is air or replaceable
         Block block = oldWorld.getBlockState(newPosition).getBlock();
-        if (block != null &&
-                !oldWorld.isAirBlock(newPosition) &&
-                !WorldUtil.isLiquidBlock(oldWorld, newPosition) &&
-                !block.isReplaceable(oldWorld, newPosition)) {
+        if (!oldWorld.isAirBlock(newPosition) && !WorldUtil.isLiquidBlock(oldWorld, newPosition) && !block.isReplaceable(oldWorld, newPosition)) {
             return TurtleCommandResult.failure("Movement obstructed");
         }
 

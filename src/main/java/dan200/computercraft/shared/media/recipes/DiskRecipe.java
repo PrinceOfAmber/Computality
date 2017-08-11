@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of ComputerCraft - http://www.computercraft.info
  * Copyright Daniel Ratcliffe, 2011-2016. Do not distribute without permission.
  * Send enquiries to dratcliffe@gmail.com
@@ -30,7 +30,7 @@ public class DiskRecipe implements IRecipe {
         for (int var5 = 0; var5 < inventory.getSizeInventory(); ++var5) {
             ItemStack var6 = inventory.getStackInSlot(var5);
 
-            if (var6 != null) {
+            if (!var6.isEmpty()) {
                 if (var6.getItem() instanceof ItemDiskLegacy) {
                     if (diskFound || redstoneFound || paperFound) // make sure no redstone or paper already accepted if disk there
                     {
@@ -79,7 +79,7 @@ public class DiskRecipe implements IRecipe {
         for (var7 = 0; var7 < par1InventoryCrafting.getSizeInventory(); ++var7) {
             ItemStack var8 = par1InventoryCrafting.getStackInSlot(var7);
 
-            if (var8 != null) {
+            if (!var8.isEmpty()) {
                 if (var8.getItem() instanceof ItemDiskLegacy) {
                     var6 = (ItemDiskLegacy) var8.getItem();
                     diskID = var6.getDiskID(var8);

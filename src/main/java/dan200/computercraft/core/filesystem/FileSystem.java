@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of ComputerCraft - http://www.computercraft.info
  * Copyright Daniel Ratcliffe, 2011-2016. Do not distribute without permission.
  * Send enquiries to dratcliffe@gmail.com
@@ -15,8 +15,8 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 public class FileSystem {
-    private final Map<String, MountWrapper> m_mounts = new HashMap<String, MountWrapper>();
-    private final Set<IMountedFile> m_openFiles = new HashSet<IMountedFile>();
+    private final Map<String, MountWrapper> m_mounts = new HashMap<>();
+    private final Set<IMountedFile> m_openFiles = new HashSet<>();
 
     public FileSystem(String rootLabel, IMount rootMount) throws FileSystemException {
         mount(rootLabel, "", rootMount);
@@ -78,9 +78,8 @@ public class FileSystem {
 
         // Collapse the string into its component parts, removing ..'s
         String[] parts = path.split("/");
-        Stack<String> outputParts = new Stack<String>();
-        for (int n = 0; n < parts.length; ++n) {
-            String part = parts[n];
+        Stack<String> outputParts = new Stack<>();
+        for (String part : parts) {
             if (part.length() == 0 || part.equals(".")) {
                 // . is redundant
                 continue;
@@ -168,7 +167,7 @@ public class FileSystem {
             throw new NullPointerException();
         }
         location = sanitizePath(location);
-        if (location.indexOf("..") != -1) {
+        if (location.contains("..")) {
             throw new FileSystemException("Cannot mount below the root");
         }
         mount(new MountWrapper(label, location, mount));
@@ -224,13 +223,11 @@ public class FileSystem {
         MountWrapper mount = getMount(path);
 
         // Gets a list of the files in the mount
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
         mount.list(path, list);
 
         // Add any mounts that are mounted at this location
-        Iterator<MountWrapper> it = m_mounts.values().iterator();
-        while (it.hasNext()) {
-            MountWrapper otherMount = it.next();
+        for (MountWrapper otherMount : m_mounts.values()) {
             if (getDirectory(otherMount.getLocation()).equals(path)) {
                 list.add(getName(otherMount.getLocation()));
             }
@@ -239,13 +236,13 @@ public class FileSystem {
         // Return list
         String[] array = new String[list.size()];
         list.toArray(array);
+        Arrays.sort(array);
         return array;
     }
 
     private void findIn(String dir, List<String> matches, Pattern wildPattern) throws FileSystemException {
         String[] list = list(dir);
-        for (int i = 0; i < list.length; ++i) {
-            String entry = list[i];
+        for (String entry : list) {
             String entryPath = dir.isEmpty() ? entry : (dir + "/" + entry);
             if (wildPattern.matcher(entryPath).matches()) {
                 matches.add(entryPath);
@@ -275,7 +272,7 @@ public class FileSystem {
 
         // Scan as normal, starting from this directory
         Pattern wildPattern = Pattern.compile("^\\Q" + wildPath.replaceAll("\\*", "\\\\E[^\\\\/]*\\\\Q") + "\\E$");
-        List<String> matches = new ArrayList<String>();
+        List<String> matches = new ArrayList<>();
         findIn(startDir, matches, wildPattern);
 
         // Return matches
@@ -368,7 +365,7 @@ public class FileSystem {
             destinationMount.makeDirectory(destinationPath);
 
             // Copy the source contents into it
-            List<String> sourceChildren = new ArrayList<String>();
+            List<String> sourceChildren = new ArrayList<>();
             sourceMount.list(sourcePath, sourceChildren);
             for (String child : sourceChildren) {
                 copyRecursive(

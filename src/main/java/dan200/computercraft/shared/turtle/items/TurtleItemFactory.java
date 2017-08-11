@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of ComputerCraft - http://www.computercraft.info
  * Copyright Daniel Ratcliffe, 2011-2016. Do not distribute without permission.
  * Send enquiries to dratcliffe@gmail.com
@@ -19,7 +19,10 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
+import javax.annotation.Nonnull;
+
 public class TurtleItemFactory {
+    @Nonnull
     public static ItemStack create(ITurtleTile turtle) {
         ITurtleUpgrade leftUpgrade = turtle.getAccess().getUpgrade(TurtleSide.Left);
         ITurtleUpgrade rightUpgrade = turtle.getAccess().getUpgrade(TurtleSide.Right);
@@ -40,6 +43,7 @@ public class TurtleItemFactory {
         return create(-1, null, turtle.getColour(), turtle.getFamily(), leftUpgrade, rightUpgrade, 0, turtle.getOverlay());
     }
 
+    @Nonnull
     public static ItemStack create(int id, String label, Colour colour, ComputerFamily family, ITurtleUpgrade leftUpgrade, ITurtleUpgrade rightUpgrade, int fuelLevel, ResourceLocation overlay) {
         switch (family) {
             case Normal: {
@@ -68,9 +72,9 @@ public class TurtleItemFactory {
                     ItemTurtleBase beginnersItem = ((ItemTurtleBase) Item.getItemFromBlock(beginnersBlock));
                     return beginnersItem.create(id, label, colour, leftUpgrade, rightUpgrade, fuelLevel, overlay);
                 }
-                return null;
+                return ItemStack.EMPTY;
             }
         }
-        return null;
+        return ItemStack.EMPTY;
     }
 }

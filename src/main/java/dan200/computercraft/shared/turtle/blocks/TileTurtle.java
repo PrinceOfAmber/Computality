@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of ComputerCraft - http://www.computercraft.info
  * Copyright Daniel Ratcliffe, 2011-2016. Do not distribute without permission.
  * Send enquiries to dratcliffe@gmail.com
@@ -376,7 +376,7 @@ public class TileTurtle extends TileComputerBase
     }
 
     @Override
-    public void setInventorySlotContents(int i, ItemStack stack) {
+    public void setInventorySlotContents(int i, @Nonnull ItemStack stack) {
         if (i >= 0 && i < INVENTORY_SIZE) {
             synchronized (inventory) {
                 if (!InventoryUtil.areItemsEqual(stack, inventory.getStackInSlot(i))) {
@@ -535,7 +535,7 @@ public class TileTurtle extends TileComputerBase
             default:
                 return false;
         }
-        return upgrade != null && upgrade.getType() == TurtleUpgradeType.Peripheral;
+        return upgrade != null && upgrade.getType().isPeripheral();
     }
 
     public void transferStateFrom(TileTurtle copy) {

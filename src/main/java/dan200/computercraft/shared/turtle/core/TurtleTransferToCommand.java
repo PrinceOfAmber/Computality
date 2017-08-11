@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of ComputerCraft - http://www.computercraft.info
  * Copyright Daniel Ratcliffe, 2011-2016. Do not distribute without permission.
  * Send enquiries to dratcliffe@gmail.com
@@ -26,14 +26,14 @@ public class TurtleTransferToCommand implements ITurtleCommand {
     public TurtleCommandResult execute(ITurtleAccess turtle) {
         // Take stack
         ItemStack stack = InventoryUtil.takeItems(m_quantity, turtle.getInventory(), turtle.getSelectedSlot(), 1, turtle.getSelectedSlot());
-        if (stack == null) {
+        if (stack.isEmpty()) {
             turtle.playAnimation(TurtleAnimation.Wait);
             return TurtleCommandResult.success();
         }
 
         // Store stack
         ItemStack remainder = InventoryUtil.storeItems(stack, turtle.getInventory(), m_slot, 1, m_slot);
-        if (remainder != null) {
+        if (!remainder.isEmpty()) {
             // Put the remainder back
             InventoryUtil.storeItems(remainder, turtle.getInventory(), turtle.getSelectedSlot(), 1, turtle.getSelectedSlot());
         }

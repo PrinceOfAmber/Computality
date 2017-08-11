@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of ComputerCraft - http://www.computercraft.info
  * Copyright Daniel Ratcliffe, 2011-2016. Do not distribute without permission.
  * Send enquiries to dratcliffe@gmail.com
@@ -8,7 +8,6 @@ package dan200.computercraft.shared.proxy;
 
 import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.api.turtle.ITurtleUpgrade;
-import dan200.computercraft.api.turtle.TurtleUpgradeType;
 import dan200.computercraft.shared.computer.core.ComputerFamily;
 import dan200.computercraft.shared.computer.items.ComputerItemFactory;
 import dan200.computercraft.shared.turtle.blocks.BlockTurtle;
@@ -41,6 +40,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.RecipeSorter;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 public abstract class CCTurtleProxyCommon implements ICCTurtleProxy {
@@ -49,9 +49,9 @@ public abstract class CCTurtleProxyCommon implements ICCTurtleProxy {
     private Map<Entity, IEntityDropConsumer> m_dropConsumers;
 
     public CCTurtleProxyCommon() {
-        m_legacyTurtleUpgrades = new HashMap<Integer, ITurtleUpgrade>();
-        m_turtleUpgrades = new HashMap<String, ITurtleUpgrade>();
-        m_dropConsumers = new WeakHashMap<Entity, IEntityDropConsumer>();
+        m_legacyTurtleUpgrades = new HashMap<>();
+        m_turtleUpgrades = new HashMap<>();
+        m_dropConsumers = new WeakHashMap<>();
     }
 
     // ICCTurtleProxy implementation
@@ -61,7 +61,7 @@ public abstract class CCTurtleProxyCommon implements ICCTurtleProxy {
     }
 
     public static boolean isUpgradeSuitableForFamily(ComputerFamily family, ITurtleUpgrade upgrade) {
-        return family != ComputerFamily.Beginners || upgrade.getType() == TurtleUpgradeType.Tool;
+        return family != ComputerFamily.Beginners || upgrade.getType().isTool();
     }
 
     @Override
@@ -98,7 +98,7 @@ public abstract class CCTurtleProxyCommon implements ICCTurtleProxy {
     }
 
     @Override
-    public ITurtleUpgrade getTurtleUpgrade(ItemStack stack) {
+    public ITurtleUpgrade getTurtleUpgrade(@Nonnull ItemStack stack) {
         for (ITurtleUpgrade upgrade : m_turtleUpgrades.values()) {
             try {
                 ItemStack upgradeStack = upgrade.getCraftingItem();
@@ -113,7 +113,7 @@ public abstract class CCTurtleProxyCommon implements ICCTurtleProxy {
 
     private void addAllUpgradedTurtles(ComputerFamily family, List<ItemStack> list) {
         ItemStack basicStack = TurtleItemFactory.create(-1, null, null, family, null, null, 0, null);
-        if (basicStack != null) {
+        if (!basicStack.isEmpty()) {
             list.add(basicStack);
         }
         addUpgradedTurtle(family, ComputerCraft.Upgrades.diamondPickaxe, list);
@@ -129,7 +129,7 @@ public abstract class CCTurtleProxyCommon implements ICCTurtleProxy {
     private void addUpgradedTurtle(ComputerFamily family, ITurtleUpgrade upgrade, List<ItemStack> list) {
         if (isUpgradeSuitableForFamily(family, upgrade)) {
             ItemStack stack = TurtleItemFactory.create(-1, null, null, family, upgrade, null, 0, null);
-            if (stack != null) {
+            if (!stack.isEmpty()) {
                 list.add(stack);
             }
         }
@@ -242,7 +242,7 @@ public abstract class CCTurtleProxyCommon implements ICCTurtleProxy {
                 }
 
                 ItemStack baseTurtle = TurtleItemFactory.create(-1, null, null, family, null, null, 0, null);
-                if (baseTurtle != null) {
+                if (!baseTurtle.isEmpty()) {
                     ItemStack craftedTurtle = TurtleItemFactory.create(-1, null, null, family, upgrade, null, 0, null);
                     ItemStack craftedTurtleFlipped = TurtleItemFactory.create(-1, null, null, family, null, upgrade, 0, null);
                     recipeList.add(new ImpostorRecipe(2, 1, new ItemStack[]{baseTurtle, craftingItem}, craftedTurtle));

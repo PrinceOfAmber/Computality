@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of ComputerCraft - http://www.computercraft.info
  * Copyright Daniel Ratcliffe, 2011-2016. Do not distribute without permission.
  * Send enquiries to dratcliffe@gmail.com
@@ -32,6 +32,7 @@ public class PocketComputerUpgradeRecipe implements IRecipe {
     }
 
     @Override
+    @Nonnull
     public ItemStack getRecipeOutput() {
         return PocketComputerItemFactory.create(-1, null, ComputerFamily.Normal, null);
     }
@@ -106,6 +107,7 @@ public class PocketComputerUpgradeRecipe implements IRecipe {
     }
 
     @Override
+    @Nonnull
     public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inventoryCrafting) {
         NonNullList<ItemStack> list = NonNullList.create();
         for (int i = 0; i < inventoryCrafting.getSizeInventory(); ++i) {

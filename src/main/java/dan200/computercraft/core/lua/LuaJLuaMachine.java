@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of ComputerCraft - http://www.computercraft.info
  * Copyright Daniel Ratcliffe, 2011-2016. Do not distribute without permission.
  * Send enquiries to dratcliffe@gmail.com
@@ -120,8 +120,8 @@ public class LuaJLuaMachine implements ILuaMachine {
         // Add the methods of an API to the global table
         LuaTable table = wrapLuaObject(api);
         String[] names = api.getNames();
-        for (int i = 0; i < names.length; ++i) {
-            m_globals.set(names[i], table);
+        for (String name : names) {
+            m_globals.set(name, table);
         }
     }
 
@@ -194,7 +194,7 @@ public class LuaJLuaMachine implements ILuaMachine {
             Varargs results = m_coroutine_resume.invoke(LuaValue.varargsOf(resumeArgs));
             if (m_hardAbortMessage != null) {
                 throw new LuaError(m_hardAbortMessage);
-            } else if (results.arg1().checkboolean() == false) {
+            } else if (!results.arg1().checkboolean()) {
                 throw new LuaError(results.arg(2).checkstring().toString());
             } else {
                 LuaValue filter = results.arg(2);

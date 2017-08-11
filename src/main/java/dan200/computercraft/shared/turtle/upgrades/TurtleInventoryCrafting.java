@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of ComputerCraft - http://www.computercraft.info
  * Copyright Daniel Ratcliffe, 2011-2016. Do not distribute without permission.
  * Send enquiries to dratcliffe@gmail.com
@@ -19,6 +19,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 
 public class TurtleInventoryCrafting extends InventoryCrafting {
@@ -129,11 +130,12 @@ public class TurtleInventoryCrafting extends InventoryCrafting {
     }
 
     @Override
+    @Nonnull
     public ItemStack getStackInRowAndColumn(int x, int y) {
         if (x >= 0 && x < getWidth() && y >= 0 && y < getHeight()) {
             return getStackInSlot(x + y * getWidth());
         }
-        return null;
+        return ItemStack.EMPTY;
     }
 
     @Override
@@ -164,6 +166,7 @@ public class TurtleInventoryCrafting extends InventoryCrafting {
     }
 
     @Override
+    @Nonnull
     public ItemStack getStackInSlot(int i) {
         i = modifyIndex(i);
         return m_turtle.getInventory().getStackInSlot(i);

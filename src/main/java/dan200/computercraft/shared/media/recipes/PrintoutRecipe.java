@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of ComputerCraft - http://www.computercraft.info
  * Copyright Daniel Ratcliffe, 2011-2016. Do not distribute without permission.
  * Send enquiries to dratcliffe@gmail.com
@@ -47,7 +47,7 @@ public class PrintoutRecipe implements IRecipe {
         for (int y = 0; y < inventory.getHeight(); ++y) {
             for (int x = 0; x < inventory.getWidth(); ++x) {
                 ItemStack stack = inventory.getStackInRowAndColumn(x, y);
-                if (stack != null) {
+                if (!stack.isEmpty()) {
                     Item item = stack.getItem();
                     if (item instanceof ItemPrintout && ItemPrintout.getType(stack) != ItemPrintout.Type.Book) {
                         if (printouts == null) {

@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of ComputerCraft - http://www.computercraft.info
  * Copyright Daniel Ratcliffe, 2011-2016. Do not distribute without permission.
  * Send enquiries to dratcliffe@gmail.com
@@ -250,9 +250,9 @@ public class WidgetTerminal extends Widget {
     @Override
     public void update() {
         // Handle special keys
-        if (m_focus && !m_locked && (Keyboard.isKeyDown(29) || Keyboard.isKeyDown(157))) {
+        if (m_focus && !m_locked && (Keyboard.isKeyDown(Keyboard.KEY_LCONTROL) || Keyboard.isKeyDown(Keyboard.KEY_RCONTROL))) {
             // Ctrl+T for terminate
-            if (Keyboard.isKeyDown(20)) {
+            if (Keyboard.isKeyDown(Keyboard.KEY_T)||Keyboard.isKeyDown(Keyboard.KEY_X)) {
                 if (m_terminateTimer < TERMINATE_TIME) {
                     m_terminateTimer = m_terminateTimer + 0.05f;
                     if (m_terminateTimer >= TERMINATE_TIME) {
@@ -264,7 +264,7 @@ public class WidgetTerminal extends Widget {
             }
 
             // Ctrl+R for reboot
-            if (Keyboard.isKeyDown(19)) {
+            if (Keyboard.isKeyDown(Keyboard.KEY_R)) {
                 if (m_rebootTimer < TERMINATE_TIME) {
                     m_rebootTimer = m_rebootTimer + 0.05f;
                     if (m_rebootTimer >= TERMINATE_TIME) {
@@ -279,7 +279,7 @@ public class WidgetTerminal extends Widget {
             }
 
             // Ctrl+S for shutdown
-            if (Keyboard.isKeyDown(31)) {
+            if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
                 if (m_shutdownTimer < TERMINATE_TIME) {
                     m_shutdownTimer = m_shutdownTimer + 0.05f;
                     if (m_shutdownTimer >= TERMINATE_TIME) {
@@ -370,11 +370,8 @@ public class WidgetTerminal extends Widget {
 
     @Override
     public boolean suppressKeyPress(char c, int k) {
-        if (m_focus) {
-            return k != 1; // escape
-        } else {
-            return false;
-        }
+        // escape
+        return m_focus && k != 1;
     }
 
     private void queueEvent(String event) {

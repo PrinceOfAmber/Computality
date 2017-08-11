@@ -5,6 +5,11 @@ package dan200.computercraft.shared.peripheral.diskdrive;
   Send enquiries to dratcliffe@gmail.com
  */
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+
 import dan200.computercraft.ComputerCraft;
 import dan200.computercraft.api.filesystem.IMount;
 import dan200.computercraft.api.filesystem.IWritableMount;
@@ -30,11 +35,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
-
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
 
 public class TileDiskDrive extends TilePeripheralBase
         implements ITickable, IInventory {
@@ -79,10 +79,10 @@ public class TileDiskDrive extends TilePeripheralBase
             // Try to put a disk into the drive
             if (!getWorld().isRemote) {
                 ItemStack disk = player.getHeldItem(EnumHand.MAIN_HAND);
-                if (!disk.isEmpty() && getStackInSlot(0) == null) {
+                if (!disk.isEmpty() && getStackInSlot(0).isEmpty()) {
                     if (ComputerCraft.getMedia(disk) != null) {
                         setInventorySlotContents(0, disk);
-                        player.setHeldItem(EnumHand.MAIN_HAND, null);
+                        player.setHeldItem(EnumHand.MAIN_HAND, ItemStack.EMPTY);
                         return true;
                     }
                 }
@@ -188,19 +188,19 @@ public class TileDiskDrive extends TilePeripheralBase
 
     @Override
     public ItemStack decrStackSize(int i, int j) {
-        if (m_diskStack == null) {
-            return null;
+        if (m_diskStack.isEmpty()) {
+            return ItemStack.EMPTY;
         }
 
         if (m_diskStack.getCount() <= j) {
             ItemStack disk = m_diskStack;
-            setInventorySlotContents(0, null);
+            setInventorySlotContents(0, ItemStack.EMPTY);
             return disk;
         }
 
         ItemStack part = m_diskStack.splitStack(j);
         if (m_diskStack.getCount() == 0) {
-            setInventorySlotContents(0, null);
+            setInventorySlotContents(0, ItemStack.EMPTY);
         } else {
             setInventorySlotContents(0, m_diskStack);
         }
@@ -223,7 +223,7 @@ public class TileDiskDrive extends TilePeripheralBase
             }
 
             // Unmount old disk
-            if (m_diskStack != null) {
+            if (!m_diskStack.isEmpty()) {
                 Set<IComputerAccess> computers = m_computers.keySet();
                 Iterator<IComputerAccess> it = computers.iterator();
                 while (it.hasNext()) {
@@ -248,7 +248,7 @@ public class TileDiskDrive extends TilePeripheralBase
             updateAnim();
 
             // Mount new disk
-            if (m_diskStack != null) {
+            if (!m_diskStack.isEmpty()) {
                 Set<IComputerAccess> computers = m_computers.keySet();
                 Iterator<IComputerAccess> it = computers.iterator();
                 while (it.hasNext()) {
@@ -309,7 +309,7 @@ public class TileDiskDrive extends TilePeripheralBase
     @Override
     public void clear() {
         synchronized (this) {
-            setInventorySlotContents(0, null);
+            setInventorySlotContents(0, ItemStack.EMPTY);
         }
     }
 
@@ -400,7 +400,7 @@ public class TileDiskDrive extends TilePeripheralBase
     }
 
     private synchronized void mountDisk(IComputerAccess computer) {
-        if (m_diskStack != null) {
+        if (!m_diskStack.isEmpty()) {
             MountInfo info = m_computers.get(computer);
             IMedia contents = getDiskMedia();
             if (contents != null) {
@@ -434,7 +434,7 @@ public class TileDiskDrive extends TilePeripheralBase
     // private methods
 
     private synchronized void unmountDisk(IComputerAccess computer) {
-        if (m_diskStack != null) {
+        if (!m_diskStack.isEmpty()) {
             MountInfo info = m_computers.get(computer);
             assert (info != null);
             if (info.mountPath != null) {
@@ -446,7 +446,7 @@ public class TileDiskDrive extends TilePeripheralBase
     }
 
     private synchronized void updateAnim() {
-        if (m_diskStack != null) {
+        if (!m_diskStack.isEmpty()) {
             IMedia contents = getDiskMedia();
             if (contents != null) {
                 setAnim(2);
@@ -463,10 +463,10 @@ public class TileDiskDrive extends TilePeripheralBase
             return;
         }
 
-        if (m_diskStack != null) {
+        if (!m_diskStack.isEmpty()) {
             // Remove the disks from the inventory
             ItemStack disks = m_diskStack;
-            setInventorySlotContents(0, null);
+            setInventorySlotContents(0, ItemStack.EMPTY);
 
             // Spawn the item in the world
             int xOff = 0;

@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of ComputerCraft - http://www.computercraft.info
  * Copyright Daniel Ratcliffe, 2011-2016. Do not distribute without permission.
  * Send enquiries to dratcliffe@gmail.com
@@ -16,12 +16,14 @@ import dan200.computercraft.shared.util.Colour;
 import dan200.computercraft.shared.util.DirectionUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.common.ForgeModContainer;
 import org.lwjgl.opengl.GL11;
 
 public class TileEntityMonitorRenderer extends TileEntitySpecialRenderer<TileMonitor> {
@@ -31,7 +33,15 @@ public class TileEntityMonitorRenderer extends TileEntitySpecialRenderer<TileMon
     @Override
     public void renderTileEntityAt(TileMonitor tileEntity, double posX, double posY, double posZ, float f, int i) {
         if (tileEntity != null) {
-            renderMonitorAt(tileEntity, posX, posY, posZ, f, i);
+            GlStateManager.pushMatrix();
+            if(ComputerCraft.Config.monitorFullbright) {
+                Minecraft.getMinecraft().entityRenderer.disableLightmap();
+                renderMonitorAt(tileEntity, posX, posY, posZ, f, i);
+                Minecraft.getMinecraft().entityRenderer.enableLightmap();
+            } else {
+                renderMonitorAt(tileEntity, posX, posY, posZ, f, i);
+            }
+            GlStateManager.popMatrix();
         }
     }
 

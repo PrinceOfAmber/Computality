@@ -15,6 +15,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.tuple.Pair;
 
+import javax.annotation.Nonnull;
 import javax.vecmath.Matrix4f;
 
 
@@ -62,6 +63,7 @@ public interface ITurtleUpgrade {
      * with to create a turtle which holds this upgrade. This item stack is also used
      * to determine the upgrade given by turtle.equip()
      */
+    @Nonnull
     ItemStack getCraftingItem();
 
     /**

@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of ComputerCraft - http://www.computercraft.info
  * Copyright Daniel Ratcliffe, 2011-2016. Do not distribute without permission.
  * Send enquiries to dratcliffe@gmail.com
@@ -27,7 +27,7 @@ import java.io.IOException;
 
 public class GuiTurtle extends GuiContainer {
     private static final ResourceLocation background = new ResourceLocation("computercraft", "textures/gui/turtle.png");
-    private static final ResourceLocation backgroundAdvanced = new ResourceLocation("computercraft", "textures/gui/turtle2.png");
+    private static final ResourceLocation backgroundAdvanced = new ResourceLocation("computercraft", "textures/gui/turtle_advanced.png");
     protected final ComputerFamily m_family;
     protected final ITurtleAccess m_turtle;
     protected final IComputer m_computer;

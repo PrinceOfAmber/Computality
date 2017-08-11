@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of ComputerCraft - http://www.computercraft.info
  * Copyright Daniel Ratcliffe, 2011-2016. Do not distribute without permission.
  * Send enquiries to dratcliffe@gmail.com
@@ -22,6 +22,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
 
+import javax.annotation.Nonnull;
+
 public class TurtleUpgradeRecipe implements IRecipe {
     public TurtleUpgradeRecipe() {
     }
@@ -32,17 +34,19 @@ public class TurtleUpgradeRecipe implements IRecipe {
     }
 
     @Override
+    @Nonnull
     public ItemStack getRecipeOutput() {
         return TurtleItemFactory.create(-1, null, null, ComputerFamily.Normal, null, null, 0, null);
     }
 
     @Override
-    public boolean matches(InventoryCrafting inventory, World world) {
+    public boolean matches(@Nonnull InventoryCrafting inventory, @Nonnull World world) {
         return (!getCraftingResult(inventory).isEmpty());
     }
 
     @Override
-    public ItemStack getCraftingResult(InventoryCrafting inventory) {
+    @Nonnull
+    public ItemStack getCraftingResult(@Nonnull InventoryCrafting inventory) {
         // Scan the grid for a row containing a turtle and 1 or 2 items
         ItemStack leftItem = ItemStack.EMPTY;
         ItemStack turtle = ItemStack.EMPTY;
@@ -100,10 +104,9 @@ public class TurtleUpgradeRecipe implements IRecipe {
         }
 
         // See if we found a turtle + one or more items
-        if (turtle.isEmpty() || (leftItem.isEmpty() && rightItem.isEmpty())) {
+        if (turtle.isEmpty()||(leftItem.isEmpty()&&rightItem.isEmpty())) {
             return ItemStack.EMPTY;
         }
-
         // At this point we have a turtle + 1 or 2 items
         // Get the turtle we already have
         ITurtleItem itemTurtle = (ITurtleItem) turtle.getItem();
@@ -116,7 +119,7 @@ public class TurtleUpgradeRecipe implements IRecipe {
         // Get the upgrades for the new items
         ItemStack[] items = new ItemStack[]{rightItem, leftItem};
         for (int i = 0; i < 2; ++i) {
-            if (items[i] != null) {
+            if (items[i] != ItemStack.EMPTY) {
                 ITurtleUpgrade itemUpgrade = ComputerCraft.getTurtleUpgrade(items[i]);
                 if (itemUpgrade == null) {
                     return ItemStack.EMPTY;
@@ -141,7 +144,8 @@ public class TurtleUpgradeRecipe implements IRecipe {
     }
 
     @Override
-    public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inventoryCrafting) {
+    @Nonnull
+    public NonNullList<ItemStack> getRemainingItems(@Nonnull InventoryCrafting inventoryCrafting) {
         NonNullList<ItemStack> list = NonNullList.create();
         for (int i = 0; i < inventoryCrafting.getSizeInventory(); ++i) {
             ItemStack stack = inventoryCrafting.getStackInSlot(i);

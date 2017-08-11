@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of ComputerCraft - http://www.computercraft.info
  * Copyright Daniel Ratcliffe, 2011-2016. Do not distribute without permission.
  * Send enquiries to dratcliffe@gmail.com
@@ -375,6 +375,8 @@ public class Computer {
         m_apis.add(new OSAPI(m_apiEnvironment));
         m_apis.add(new BitAPI(m_apiEnvironment));
         m_apis.add(new MinecraftAPI(m_apiEnvironment));
+        m_apis.add(new ServerAPI(m_apiEnvironment));
+        m_apis.add(new TimeAPI());
         //m_apis.add( new BufferAPI( m_apiEnvironment ) );
         if (ComputerCraft.Config.http_enable) {
             m_apis.add(new HTTPAPI(m_apiEnvironment));

@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of ComputerCraft - http://www.computercraft.info
  * Copyright Daniel Ratcliffe, 2011-2016. Do not distribute without permission.
  * Send enquiries to dratcliffe@gmail.com
@@ -23,12 +23,18 @@ public class TurtleToolCommand implements ITurtleCommand {
     @Override
     public TurtleCommandResult execute(ITurtleAccess turtle) {
         TurtleCommandResult firstFailure = null;
+
+        if (turtle.isFuelNeeded() && turtle.getFuelLevel() < 1) {
+            return TurtleCommandResult.failure("Out of fuel");
+        }
+
         for (TurtleSide side : TurtleSide.values()) {
             if (!m_side.isPresent() || m_side.get() == side) {
                 ITurtleUpgrade upgrade = turtle.getUpgrade(side);
-                if (upgrade != null && upgrade.getType() == TurtleUpgradeType.Tool) {
+                if (upgrade != null && upgrade.getType().isTool()) {
                     TurtleCommandResult result = upgrade.useTool(turtle, side, m_verb, m_direction.toWorldDir(turtle));
                     if (result.isSuccess()) {
+                        turtle.consumeFuel(1);
                         switch (side) {
                             case Left: {
                                 turtle.playAnimation(TurtleAnimation.SwingLeftTool);

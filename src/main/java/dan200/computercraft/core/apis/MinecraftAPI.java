@@ -58,7 +58,7 @@ public class MinecraftAPI implements ILuaAPI {
     public Object[] callMethod(ILuaContext context, int method, Object[] arguments) throws LuaException, InterruptedException {
         switch (method) {
             case 0:
-                return new Object[]{"1.11.2"};
+                return new Object[]{Loader.MC_VERSION};
             case 1:
                 if (arguments.length < 1 || !(arguments[0] instanceof String))
                     throw new LuaException("Expected String");

@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of ComputerCraft - http://www.computercraft.info
  * Copyright Daniel Ratcliffe, 2011-2016. Do not distribute without permission.
  * Send enquiries to dratcliffe@gmail.com
@@ -35,6 +35,9 @@ public class TurtleSuckCommand implements ITurtleCommand {
     @Override
     public TurtleCommandResult execute(ITurtleAccess turtle) {
         // Sucking nothing is easy
+        if (turtle.isFuelNeeded() && turtle.getFuelLevel() < 1) {
+            return TurtleCommandResult.failure("Out of fuel");
+        }
         if (m_quantity == 0) {
             turtle.playAnimation(TurtleAnimation.Wait);
             return TurtleCommandResult.success();
@@ -53,16 +56,17 @@ public class TurtleSuckCommand implements ITurtleCommand {
         if (inventory != null) {
             // Take from inventory of thing in front
             ItemStack stack = InventoryUtil.takeItems(m_quantity, inventory, side);
-            if (stack != null) {
+            if (!stack.isEmpty()) {
                 // Try to place into the turtle
                 ItemStack remainder = InventoryUtil.storeItems(stack, turtle.getInventory(), 0, turtle.getInventory().getSizeInventory(), turtle.getSelectedSlot());
-                if (remainder != null) {
+                if (!remainder.isEmpty()) {
                     // Put the remainder back in the inventory
                     InventoryUtil.storeItems(remainder, inventory, side);
                 }
 
                 // Return true if we consumed anything
                 if (remainder != stack) {
+                    turtle.consumeFuel(1);
                     turtle.playAnimation(TurtleAnimation.Wait);
                     return TurtleCommandResult.success();
                 } else {
@@ -94,16 +98,16 @@ public class TurtleSuckCommand implements ITurtleCommand {
                             leaveStack = stack;
                         } else {
                             storeStack = stack;
-                            leaveStack = null;
+                            leaveStack = ItemStack.EMPTY;
                         }
                         ItemStack remainder = InventoryUtil.storeItems(storeStack, turtle.getInventory(), 0, turtle.getInventory().getSizeInventory(), turtle.getSelectedSlot());
                         if (remainder != storeStack) {
                             storedItems = true;
-                            if (remainder == null && leaveStack == null) {
+                            if (remainder.isEmpty() && leaveStack.isEmpty()) {
                                 entityItem.setDead();
-                            } else if (remainder == null) {
+                            } else if (remainder.isEmpty()) {
                                 entityItem.setEntityItemStack(leaveStack);
-                            } else if (leaveStack == null) {
+                            } else if (leaveStack.isEmpty()) {
                                 entityItem.setEntityItemStack(remainder);
                             } else {
                                 leaveStack.grow(remainder.getCount());
